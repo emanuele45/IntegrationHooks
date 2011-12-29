@@ -1,18 +1,35 @@
 <?xml version="1.0"?>
 <!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+	<license>
+<!--
+/**
+ * Integration Hooks Report (IHR)
+ *
+ * @package IHR
+ * @author [SiNaN]
+ * @2nd-author emanuele
+ * @copyright 2011 [SiNaN], Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 1.0
+ */
+-->
+	</license>
 	<id>[SiNaN]:IntegrationHooks</id>
-	<name>IntegrationHooks</name>
+	<name>Integration Hooks Report</name>
 	<version>1.0</version>
 	<type>modification</type>
-	<install for="2.0 - 2.99.99">
+	<install for="2.0 - 2.0.99">
 		<require-file name="Subs-IntegrationHooks.php" destination="$sourcedir" />
 		<require-file name="IntegrationHooks.english.php" destination="$languagedir" />
+		<redirect url="?action=admin;area=modsettings;sa=hooks" />
 		<code>install.php</code>
 	</install>
-	<uninstall for="2.0 - 2.99.99">
+	<uninstall for="2.0 - 2.0.99">
 		<remove-file name="$sourcedir/Subs-IntegrationHooks.php" />
 		<remove-file name="$languagedir/IntegrationHooks.english.php" />
-		<code>uninstall.php</code>
+		<redirect url="?action=admin;area=packages" />
+		<code>install.php</code>
 	</uninstall>
 </package-info>
