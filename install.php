@@ -8,7 +8,7 @@
  * @copyright 2011 [SiNaN], Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 1.0
+ * @version 1.1
  */
 
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))

@@ -8,7 +8,7 @@
  * @copyright 2011 [SiNaN], Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 1.0
+ * @version 1.1
  */
 
 if (!defined('SMF'))
@@ -139,6 +139,26 @@ function list_integration_hooks()
 	$context['default_list'] = 'list_integration_hooks';
 }
 
+function get_files_recoursive($dir_path)
+{
+	$files = array();
+
+	if ($dh = opendir($dir_path))
+	{
+		while (($file = readdir($dh)) !== false)
+			if ($file != '.' && $file != '..')
+			{
+				if (is_dir($dir_path . '/' . $file))
+					$files = array_merge($files, get_files_recoursive($dir_path . '/' . $file));
+				else
+					$files[] = array('dir' => $dir_path, 'name' => $file);
+			}
+	}
+	closedir($dh);
+
+	return $files;
+}
+
 function get_integration_hooks_data($start, $per_page, $sort)
 {
 	global $boarddir, $sourcedir, $settings, $txt;
@@ -146,14 +166,14 @@ function get_integration_hooks_data($start, $per_page, $sort)
 	$hooks = $temp_hooks = get_integration_hooks();
 	$hooks_data = $temp_data = $hook_status = array();
 
-	if ($dh = opendir($sourcedir))
-	{
-		while (($file = readdir($dh)) !== false)
+	$files = get_files_recoursive($sourcedir);
+	if (!empty($files))
+		foreach ($files as $file)
 		{
-			if (is_file($sourcedir . '/' . $file) && substr($file, -4) === '.php')
+			if (is_file($file['dir'] . '/' . $file['name']) && substr($file['name'], -4) === '.php')
 			{
-				$fp = fopen($sourcedir . '/' . $file, 'rb');
-				$fc = fread($fp, filesize($sourcedir . '/' . $file));
+				$fp = fopen($file['dir'] . '/' . $file['name'], 'rb');
+				$fc = fread($fp, filesize($file['dir'] . '/' . $file['name']));
 				fclose($fp);
 
 				foreach ($temp_hooks as $hook => $functions)
@@ -174,8 +194,6 @@ function get_integration_hooks_data($start, $per_page, $sort)
 				}
 			}
 		}
-		closedir($dh);
-	}
 
 	$sort_types = array(
 		'hook_name' => array('hook', SORT_ASC),

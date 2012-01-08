@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * Integration Hooks Report (IHR)
+ *
+ * @package IHR
+ * @author [SiNaN]
+ * @2nd-author emanuele
+ * @copyright 2011 [SiNaN], Simple Machines
+ * @license http://www.simplemachines.org/about/smf/license.php BSD
+ *
+ * @version 1.1
+ */
+
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
     require_once(dirname(__FILE__) . '/SSI.php');
 elseif (!defined('SMF'))
