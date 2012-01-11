@@ -21,9 +21,6 @@ function hooks_admin_areas($areas)
 	loadLanguage('IntegrationHooks');
 
 	$areas['config']['areas']['modsettings']['subsections']['hooks'] = array($txt['hooks_title_list']);
-
-	if (!empty($_REQUEST['area']) && $_REQUEST['area'] == 'modsettings' && !empty($_REQUEST['sa']) && $_REQUEST['sa'] == 'hooks')
-		$context['hooks_area'] = true;
 }
 
 function hooks_modify_modifications($sub_actions)
@@ -32,9 +29,6 @@ function hooks_modify_modifications($sub_actions)
 
 	$sub_actions['hooks'] = 'list_integration_hooks';
 	$context[$context['admin_menu_name']]['tab_data']['tabs']['hooks'] = array();
-
-	if (!empty($context['hooks_area']))
-		$context['sub_action'] = $_REQUEST['sa'] = 'hooks';
 }
 
 function list_integration_hooks()
@@ -139,7 +133,7 @@ function list_integration_hooks()
 	$context['default_list'] = 'list_integration_hooks';
 }
 
-function get_files_recoursive($dir_path)
+function get_files_recursive($dir_path)
 {
 	$files = array();
 
@@ -149,7 +143,7 @@ function get_files_recoursive($dir_path)
 			if ($file != '.' && $file != '..')
 			{
 				if (is_dir($dir_path . '/' . $file))
-					$files = array_merge($files, get_files_recoursive($dir_path . '/' . $file));
+					$files = array_merge($files, get_files_recursive($dir_path . '/' . $file));
 				else
 					$files[] = array('dir' => $dir_path, 'name' => $file);
 			}
@@ -166,7 +160,7 @@ function get_integration_hooks_data($start, $per_page, $sort)
 	$hooks = $temp_hooks = get_integration_hooks();
 	$hooks_data = $temp_data = $hook_status = array();
 
-	$files = get_files_recoursive($sourcedir);
+	$files = get_files_recursive($sourcedir);
 	if (!empty($files))
 		foreach ($files as $file)
 		{
