@@ -8,7 +8,7 @@
  * @copyright 2011 [SiNaN], Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 1.1
+ * @version 1.2
  */
 
 $txt['hooks_title_list'] = 'Хуки';
