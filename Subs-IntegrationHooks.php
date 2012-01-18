@@ -161,7 +161,7 @@ function list_integration_hooks()
 			),
 			'check' => array(
 				'header' => array(
-					'value' => 'Remove <input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />',
+					'value' => $txt['hooks_button_remove'] . ' <input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />',
 				),
 				'data' => array(
 					'function' => create_function('$data', '
