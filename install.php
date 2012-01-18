@@ -8,7 +8,7 @@
  * @copyright 2011 [SiNaN], Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 1.2
+ * @version 1.3
  */
 
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
@@ -22,11 +22,19 @@ $hooks = array(
 	'integrate_modify_modifications' => 'hooks_modify_modifications',
 );
 
-$integration_function = empty($context['uninstalling']) ? 'add_integration_function' : 'remove_integration_function';
-foreach ($hooks as $hook => $function)
-	$integration_function($hook, $function);
+if (SMF == 'SSI' && (!isset($_GET['action']) || (isset($_GET['action']) && !in_array($_GET['action'], array('install', 'uninstall')))))
+	echo '
+		Please select the action you want to perform:<br />
+		<a href="' . $boardurl . 'install.php?action=install">Install</a><br />
+		<a href="' . $boardurl . 'install.php?action=uninstall">Uninstall</a>';
+else
+{
+	$context['uninstalling'] = isset($context['uninstalling']) ? $context['uninstalling'] : (isset($_GET['action']) && $_GET['action'] == 'uninstall' ? true : false);
+	$integration_function = empty($context['uninstalling']) ? 'add_integration_function' : 'remove_integration_function';
+	foreach ($hooks as $hook => $function)
+		$integration_function($hook, $function);
 
-if (SMF == 'SSI')
-	echo 'Database adaptation successful!';
-
+	if (SMF == 'SSI')
+		echo 'Database adaptation successful!';
+}
 ?>
