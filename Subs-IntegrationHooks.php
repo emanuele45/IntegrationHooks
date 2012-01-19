@@ -161,11 +161,16 @@ function list_integration_hooks()
 			),
 			'check' => array(
 				'header' => array(
-					'value' => $txt['hooks_button_remove'] . ' <input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />',
+					'value' => $txt['hooks_button_remove'],
 				),
 				'data' => array(
 					'function' => create_function('$data', '
-						return \'<input type="checkbox" name="remove[\' . $data[\'hook_name\'] . \'][]" value="\' . $data[\'function_name\'] . \'"\' . ($data[\'hook_exists\'] ? \' disabled="disabled"\' : \'\') . \'  class="input_check" />\';
+						if (!$data[\'hook_exists\'])
+							return \'
+							<a href="" onclick="integrationHooks_remove(this.id); return false;" id="remove_\' . $data[\'id\'] . \'">
+								<img src="\' . $settings[\'images_url\'] . \'/admin/post_moderation_\' . $data[\'status\'] . \'.gif" alt="\' . $data[\'img_text\'] . \'" title="\' . $data[\'img_text\'] . \'" />
+							</a>
+							<input id="input_remove_\' . $data[\'id\'] . \'" type="hidden" name="remove[\' . $data[\'hook_name\'] . \'][\' . $data[\'function_name\'] . \']" value="\' . ($data[\'enabled\'] ? \'enable\' : \'disable\') . \'" />\';
 					'),
 					'class' => 'centertext',
 				),
