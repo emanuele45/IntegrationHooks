@@ -81,16 +81,17 @@ function list_integration_hooks()
 		}
 	}
 
-	$context['filter'] = false;
 	$presentHooks = get_integration_hooks();
-	if (isset($_GET['filter']) && in_array($_GET['filter'], array_keys($presentHooks)))
-		$context['filter'] = $_GET['filter'];
+
+	$context['filter'] = (isset($_GET['filter']) && in_array($_GET['filter'], array_keys($presentHooks))) ? $_GET['filter'] : false;
+	$sort = (isset($_GET['sort']) && in_array($_GET['sort'], array('hook_name', 'function_name', 'file_name', 'status'))) ? $_GET['sort'] : false;
+	$sort_order = isset($_GET['desc']) ? ';desc' : '';
 
 	$list_options = array(
 		'id' => 'list_integration_hooks',
 		'title' => $txt['hooks_title_list'],
 		'items_per_page' => 20,
-		'base_href' => $scripturl . '?action=admin;area=modsettings;sa=hooks;' . (!empty($context['filter']) ? ('filter=' . $context['filter'] . ';') : '') . $context['session_var'] . '=' . $context['session_id'],
+		'base_href' => $scripturl . '?action=admin;area=modsettings;sa=hooks;' . (!empty($context['filter']) ? ('filter=' . $context['filter'] . ';') : '') . (!empty($sort) ? ('sort=' . $sort . $sort_order .';') : '') . $context['session_var'] . '=' . $context['session_id'],
 		'default_sort_col' => 'hook_name',
 		'get_items' => array(
 			'function' => 'get_integration_hooks_data',
@@ -181,7 +182,7 @@ function list_integration_hooks()
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=admin;area=modsettings;sa=hooks;' . (!empty($context['filter']) ? ('filter=' . $context['filter'] . ';') : '') . $context['session_var'] . '=' . $context['session_id'],
+			'href' => $scripturl . '?action=admin;area=modsettings;sa=hooks;' . (!empty($context['filter']) ? ('filter=' . $context['filter'] . ';') : '') . (!empty($sort) ? ('sort=' . $sort . $sort_order .';') : '') . $context['session_var'] . '=' . $context['session_id'],
 			'name' => 'list_integration_hooks',
 		),
 		'additional_rows' => array(
@@ -258,7 +259,7 @@ function get_integration_hooks_data($start, $per_page, $sort)
 							$temp_data['include'][basename($function)] = array('hook' => $hook, 'function' => $function);
 							unset($temp_hooks[$hook][$function_o]);
 						}
-						elseif (strpos($fc, 'function ' . trim($function) . '(') !== false)
+						elseif (strpos($fc, 'function ' . trim($function) . '(') !== false || strpos($fc, 'function ' . trim($function) . ' (') !== false)
 						{
 							$hook_status[$hook][$function]['exists'] = true;
 							$hook_status[$hook][$function]['in_file'] = $file['name'];
@@ -292,20 +293,20 @@ function get_integration_hooks_data($start, $per_page, $sort)
 		$hooks_filters[] = '<option onclick="window.location = \'' . $scripturl . '?action=admin;area=modsettings;sa=hooks;filter=' . $hook . '\';">' . $hook . '</option>';
 		foreach ($functions as $function)
 		{
-			$enabled = strstr($function, ']') === false;
 			$function = str_replace(']', '', $function);
 			// This is a not an include and the function is included in a certain file (if not it doesn't exists so don't care)
 			if (substr($hook, -8) !== '_include' && isset($hook_status[$hook][$function]['in_file']))
 			{
 				$current_hook = $temp_data['include'][$hook_status[$hook][$function]['in_file']];
-				$enabled = false;
+				$count = 0;
 
-				// Checking all the functions within this particular file
-				// if any of them is enable then the file *must* be included and the integrate_*_include hook cannot be disabled
+				// Checking all the functions within this particular file: Are they enabled?
 				foreach ($temp_data['function'][$hook_status[$hook][$function]['in_file']] as $func)
-					$enabled = $enabled || strstr($func, ']') !== false;
+					if (strstr($func, ']') !== false)
+						$count++;
 
-				if (!$enabled)
+				// If any of them is enable then the file *must* be included and the integrate_*_include hook cannot be disabled
+				if ($count != count($temp_data['function'][$hook_status[$hook][$function]['in_file']]))
 					$hook_status[$current_hook['hook']][$current_hook['function']]['enabled'] = true;
 			}
 		}
