@@ -139,6 +139,7 @@ function list_integration_hooks()
 			'status' => array(
 				'header' => array(
 					'value' => $txt['hooks_field_hook_exists'],
+					'style' => 'width:3%',
 				),
 				'data' => array(
 					'function' => create_function('$data', '
@@ -161,11 +162,19 @@ function list_integration_hooks()
 			),
 			'check' => array(
 				'header' => array(
-					'value' => $txt['hooks_button_remove'] . ' <input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />',
+					'value' => $txt['hooks_button_remove'],
+					'style' => 'width:3%',
 				),
 				'data' => array(
 					'function' => create_function('$data', '
-						return \'<input type="checkbox" name="remove[\' . $data[\'hook_name\'] . \'][]" value="\' . $data[\'function_name\'] . \'"\' . ($data[\'hook_exists\'] ? \' disabled="disabled"\' : \'\') . \'  class="input_check" />\';
+						global $settings;
+
+						if (!$data[\'hook_exists\'])
+							return \'
+							<a href="" onclick="integrationHooks_remove(this.id); return false;" id="remove_\' . $data[\'id\'] . \'">
+								<img src="\' . $settings[\'images_url\'] . \'/icons/quick_remove.gif" alt="" />
+							</a>
+							<input id="input_remove_\' . $data[\'id\'] . \'" type="hidden" name="remove[\' . $data[\'hook_name\'] . \'][\' . $data[\'function_name\'] . \']" value="\' . ($data[\'enabled\'] ? \'enable\' : \'disable\') . \'" />\';
 					'),
 					'class' => 'centertext',
 				),
@@ -176,11 +185,6 @@ function list_integration_hooks()
 			'name' => 'list_integration_hooks',
 		),
 		'additional_rows' => array(
-			array(
-				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="remove_hooks" value="' . $txt['hooks_button_remove'] . '" class="button_submit" />',
-				'class' => 'righttext',
-			),
 			array(
 				'position' => 'after_title',
 				'value' => $txt['hooks_disable_instructions'] . '<br />
