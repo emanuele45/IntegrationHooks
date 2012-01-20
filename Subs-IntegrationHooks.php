@@ -290,7 +290,7 @@ function get_integration_hooks_data($start, $per_page, $sort)
 
 	foreach ($hooks as $hook => $functions)
 	{
-		$hooks_filters[] = '<option onclick="window.location = \'' . $scripturl . '?action=admin;area=modsettings;sa=hooks;filter=' . $hook . '\';">' . $hook . '</option>';
+		$hooks_filters[] = '<option onclick="window.location = \'' . $scripturl . '?action=admin;area=modsettings;sa=hooks;filter=' . $hook . '\';"' . ($hook == $context['filter'] ? ' selected="selected"' : '') . '>' . $hook . '</option>';
 		foreach ($functions as $function)
 		{
 			$function = str_replace(']', '', $function);
