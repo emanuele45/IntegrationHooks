@@ -91,16 +91,17 @@ function template_install_script ()
 {
 	global $boardurl, $mod_name;
 
-	if (!isset($context['installation_done']))
-		echo '
-	<div class="tborder login" id="admin_login">
+	echo '
+	<div class="tborder login"">
 		<div class="cat_bar">
 			<h3 class="catbg">
 				Welcome to the install script of the mod: ' . $mod_name . '
 			</h3>
 		</div>
 		<span class="upperframe"><span></span></span>
-		<div class="roundframe centertext">
+		<div class="roundframe centertext">';
+	if (!isset($context['installation_done']))
+		echo '
 			<strong>Please select the action you want to perform:</strong>
 			<div class="buttonlist">
 				<ul>
@@ -115,11 +116,13 @@ function template_install_script ()
 						</a>
 					</li>
 				</ul>
-			</div>
+			</div>';
+	else
+		echo '<strong>Database adaptation successful!</strong>';
+
+	echo '
 		</div>
 		<span class="lowerframe"><span></span></span>
 	</div>';
-	else
-		echo 'Database adaptation successful!';
 }
 ?>
