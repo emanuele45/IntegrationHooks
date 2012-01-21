@@ -26,16 +26,6 @@ function template_integrationHooks_below()
 			document.forms["' . $context['default_list'] . '"].submit();
 		}
 
-		function integrationHooks_remove(id)
-		{
-			var elem = document.getElementById(\'input_remove_\'+id);
-			if (elem.value == \'enable\')
-				elem.value = \'disable\';
-			else if (elem.value == \'disable\')
-				elem.value = \'enable\';
-
-			document.forms["' . $context['default_list'] . '"].submit();
-		}
 	// ]]></script>';
 }
 

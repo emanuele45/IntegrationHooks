@@ -9,16 +9,24 @@
  * @copyright 2011 [SiNaN], Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 1.2
+ * @version 1.3
  */
 
-$txt['hooks_title_list'] = '≈гЏЎ';
-$txt['hooks_field_hook_name'] = '≈гЏ';
-$txt['hooks_field_function_name'] = 'ƒгЁЏжЎп';
-$txt['hooks_field_hook_exists'] = 'Єбяёџм„г’вбп?';
-$txt['hooks_exists'] = 'і–';
-$txt['hooks_missing'] = 'љ’в';
-$txt['hooks_no_hooks'] = 'љЎЏ–ЏЎе егЏё“ Ё’ гбв–Ёё“џ’Ёё.';
-$txt['hooks_button_remove'] = '√‘–џЎвм “л—а–ЁЁл’';
+$txt['hooks_title_list'] = '’уки';
+$txt['hooks_field_hook_name'] = '’ук';
+$txt['hooks_field_function_name'] = '‘ункци€';
+$txt['hooks_field_file_name'] = '‘айл';
+$txt['hooks_field_hook_exists'] = '—татус';
+$txt['hooks_active'] = '»спользуетс€';
+$txt['hooks_disabled'] = '¬ыключен';
+$txt['hooks_missing'] = 'ќтсутствует';
+$txt['hooks_no_hooks'] = 'Ќикаких хуков не установлено.';
+$txt['hooks_button_remove'] = 'X';
+$txt['hooks_disable_instructions'] = ' ликните на иконку статуса дл€ включени€ или отключени€ хука';
+$txt['hooks_disable_legend'] = 'ѕометки';
+$txt['hooks_disable_legend_exists'] = 'хук существует и используетс€';
+$txt['hooks_disable_legend_disabled'] = 'хук существует, но не используетс€';
+$txt['hooks_disable_legend_missing'] = 'хук не найден';
+$txt['hooks_reset_filter'] = '—брос фильтра';
 
 ?>

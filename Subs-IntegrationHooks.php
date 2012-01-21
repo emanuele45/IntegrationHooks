@@ -35,18 +35,14 @@ function list_integration_hooks()
 {
 	global $sourcedir, $scripturl, $context, $txt, $modSettings, $settings;
 
-	if (!empty($_POST['remove_hooks']) && !empty($_POST['remove']) && is_array($_POST['remove']))
+	if (!empty($_POST['remove']) && is_array($_POST['remove']))
 	{
 		checkSession();
 
-		foreach ($_POST['remove'] as $hook => $functions)
-		{
-			if (!is_array($functions))
-				continue;
-
-			foreach ($functions as $function)
-				remove_integration_function($hook, $function);
-		}
+		foreach ($_POST['remove'] as $hook => $function)
+			foreach ($function as $key => $value)
+				if ($value = 'disable') //almost useless
+					remove_integration_function($hook, $key);
 	}
 
 	if (!empty($_POST['disable']))
@@ -172,7 +168,7 @@ function list_integration_hooks()
 
 						if (!$data[\'hook_exists\'])
 							return \'
-							<a href="" onclick="integrationHooks_remove(this.id); return false;" id="remove_\' . $data[\'id\'] . \'">
+							<a href="" onclick="integrationHooks_switchstatus(this.id); return false;" id="remove_\' . $data[\'id\'] . \'">
 								<img src="\' . $settings[\'images_url\'] . \'/icons/quick_remove.gif" alt="" />
 							</a>
 							<input id="input_remove_\' . $data[\'id\'] . \'" type="hidden" name="remove[\' . $data[\'hook_name\'] . \'][\' . $data[\'function_name\'] . \']" value="\' . ($data[\'enabled\'] ? \'enable\' : \'disable\') . \'" />\';
@@ -190,11 +186,11 @@ function list_integration_hooks()
 				'position' => 'after_title',
 				'value' => $txt['hooks_disable_instructions'] . '<br />
 					' . $txt['hooks_disable_legend'] . ':
-									<list>
+				<ul>
 					<li><img src="' . $settings['images_url'] . '/admin/post_moderation_allow.gif" alt="' . $txt['hooks_active'] . '" title="' . $txt['hooks_active'] . '" /> ' . $txt['hooks_disable_legend_exists'] . '</li>
 					<li><img src="' . $settings['images_url'] . '/admin/post_moderation_moderate.gif" alt="' . $txt['hooks_disabled'] . '" title="' . $txt['hooks_disabled'] . '" /> ' . $txt['hooks_disable_legend_disabled'] . '</li>
 					<li><img src="' . $settings['images_url'] . '/admin/post_moderation_deny.gif" alt="' . $txt['hooks_missing'] . '" title="' . $txt['hooks_missing'] . '" /> ' . $txt['hooks_disable_legend_missing'] . '</li>
-				</list>'
+				</ul>'
 			),
 		),
 	);
@@ -313,7 +309,7 @@ function get_integration_hooks_data($start, $per_page, $sort)
 	}
 
 	if (!empty($hooks_filters))
-		$context['hooks_filters'] = '<select style="margin-left:15px;">' . '<option>---</option><option onclick="window.location = \'' . $scripturl . '?action=admin;area=modsettings;sa=hooks\';">' . $txt['hooks_reset_filter'] . '</option>' . implode('', $hooks_filters) . '</select>';
+		$context['hooks_filters'] = '<select style="margin-left:15px;"><option>---</option><option onclick="window.location = \'' . $scripturl . '?action=admin;area=modsettings;sa=hooks\';">' . $txt['hooks_reset_filter'] . '</option>' . implode('', $hooks_filters) . '</select>';
 
 	$temp_data = array();
 	$id = 0;
