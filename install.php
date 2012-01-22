@@ -44,6 +44,7 @@ function install_mod ()
 {
 	global $context, $mod_name;
 
+	$context['mod_name'] = $mod_name;
 	$context['sub_template'] = 'install_script';
 	$context['page_title_html_safe'] = 'Install script of the mod: ' . $mod_name;
 	$context['uninstalling'] = isset($_GET['action']) && $_GET['action'] == 'uninstall' ? true : false;
@@ -89,13 +90,13 @@ function install_menu_button (&$buttons)
 
 function template_install_script ()
 {
-	global $boardurl, $mod_name;
+	global $boardurl, $context;
 
 	echo '
 	<div class="tborder login"">
 		<div class="cat_bar">
 			<h3 class="catbg">
-				Welcome to the install script of the mod: ' . $mod_name . '
+				Welcome to the install script of the mod: ' . $context['mod_name'] . '
 			</h3>
 		</div>
 		<span class="upperframe"><span></span></span>
