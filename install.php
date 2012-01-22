@@ -47,7 +47,8 @@ function install_mod ()
 	$context['mod_name'] = $mod_name;
 	$context['sub_template'] = 'install_script';
 	$context['page_title_html_safe'] = 'Install script of the mod: ' . $mod_name;
-	$context['uninstalling'] = isset($_GET['action']) && $_GET['action'] == 'uninstall' ? true : false;
+	if (isset($_GET['action']))
+		$context['uninstalling'] = $_GET['action'] == 'uninstall' ? true : false;
 	$context['html_headers'] .= '
 	<style type="text/css">
     .buttonlist ul {
@@ -58,6 +59,9 @@ function install_mod ()
 
 	// Sorry, only logged in admins...
 	isAllowedTo('admin_forum');
+
+	if (isset($context['uninstalling']))
+		setup_hooks();
 }
 
 function setup_hooks ()
