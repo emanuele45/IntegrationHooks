@@ -165,10 +165,12 @@ function list_integration_hooks()
 				),
 				'data' => array(
 					'function' => create_function('$data', '
+						global $settings;
+
 						if (!$data[\'hook_exists\'])
 							return \'
 							<a href="" onclick="integrationHooks_remove(this.id); return false;" id="remove_\' . $data[\'id\'] . \'">
-								<img src="\' . $settings[\'images_url\'] . \'/admin/post_moderation_\' . $data[\'status\'] . \'.gif" alt="\' . $data[\'img_text\'] . \'" title="\' . $data[\'img_text\'] . \'" />
+								<img src="\' . $settings[\'images_url\'] . \'/icons/quick_remove.gif" alt="*" title="*" />
 							</a>
 							<input id="input_remove_\' . $data[\'id\'] . \'" type="hidden" name="remove[\' . $data[\'hook_name\'] . \'][\' . $data[\'function_name\'] . \']" value="\' . ($data[\'enabled\'] ? \'enable\' : \'disable\') . \'" />\';
 					'),
@@ -298,7 +300,7 @@ function get_integration_hooks_data($start, $per_page, $sort)
 			// This is a not an include and the function is included in a certain file (if not it doesn't exists so don't care)
 			if (substr($hook, -8) !== '_include' && isset($hook_status[$hook][$function]['in_file']))
 			{
-				$current_hook = $temp_data['include'][$hook_status[$hook][$function]['in_file']];
+				$current_hook = isset($temp_data['include'][$hook_status[$hook][$function]['in_file']]) ? $temp_data['include'][$hook_status[$hook][$function]['in_file']] : '';
 				$enabled = false;
 
 				// Checking all the functions within this particular file
@@ -306,7 +308,7 @@ function get_integration_hooks_data($start, $per_page, $sort)
 				foreach ($temp_data['function'][$hook_status[$hook][$function]['in_file']] as $func)
 					$enabled = $enabled || strstr($func, ']') !== false;
 
-				if (!$enabled)
+				if (!$enabled &&  !empty($current_hook))
 					$hook_status[$current_hook['hook']][$current_hook['function']]['enabled'] = true;
 			}
 		}
