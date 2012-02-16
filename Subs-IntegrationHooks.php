@@ -139,6 +139,7 @@ function list_integration_hooks()
 			'status' => array(
 				'header' => array(
 					'value' => $txt['hooks_field_hook_exists'],
+					'style' => 'width:3%',
 				),
 				'data' => array(
 					'function' => create_function('$data', '
@@ -162,6 +163,7 @@ function list_integration_hooks()
 			'check' => array(
 				'header' => array(
 					'value' => $txt['hooks_button_remove'],
+					'style' => 'width:3%',
 				),
 				'data' => array(
 					'function' => create_function('$data', '
@@ -183,11 +185,6 @@ function list_integration_hooks()
 			'name' => 'list_integration_hooks',
 		),
 		'additional_rows' => array(
-			array(
-				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="remove_hooks" value="' . $txt['hooks_button_remove'] . '" class="button_submit" />',
-				'class' => 'righttext',
-			),
 			array(
 				'position' => 'after_title',
 				'value' => $txt['hooks_disable_instructions'] . '<br />
