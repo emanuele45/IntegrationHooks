@@ -8,7 +8,7 @@
  * @copyright 2011 [SiNaN], Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 1.3
+ * @version 1.4
  */
 
 if (!defined('SMF'))
@@ -18,7 +18,7 @@ function hooks_admin_areas($areas)
 {
 	global $context, $txt;
 
-	loadLanguage('IntegrationHooks');
+	loadLanguage('IntegrationHooks/IntegrationHooks');
 
 	$areas['config']['areas']['modsettings']['subsections']['hooks'] = array($txt['hooks_title_list']);
 }
