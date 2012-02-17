@@ -22,11 +22,11 @@ $txt['hooks_disabled'] = 'Deshabilitado';
 $txt['hooks_missing'] = 'No Encontrado';
 $txt['hooks_no_hooks'] = 'No hay hooks instalados.';
 $txt['hooks_button_remove'] = 'Eliminar';
-$txt['hooks_disable_instructions'] = 'Click en el icono de estado para habilitar o deshabilitar hooks';
+$txt['hooks_disable_instructions'] = 'Clic en el ícono de estado para habilitar o deshabilitar hooks';
 $txt['hooks_disable_legend'] = 'Leyenda';
-$txt['hooks_disable_legend_exists'] = 'El hook existe y esta activo';
-$txt['hooks_disable_legend_disabled'] = 'El hook existe pero esta deshabilitado';
-$txt['hooks_disable_legend_missing'] = 'No se encontro el hook';
+$txt['hooks_disable_legend_exists'] = 'El hook existe y está activo';
+$txt['hooks_disable_legend_disabled'] = 'El hook existe pero está deshabilitado';
+$txt['hooks_disable_legend_missing'] = 'No se encontró el hook';
 $txt['hooks_reset_filter'] = 'Reiniciar filtro';
 
 ?>
