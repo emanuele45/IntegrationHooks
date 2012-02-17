@@ -11,30 +11,123 @@
  * @version 1.4
  */
 
-if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
-	require_once(dirname(__FILE__) . '/SSI.php');
-elseif (!defined('SMF'))
-	exit('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
-
+global $hooks, $mod_name;
 $hooks = array(
 	'integrate_admin_include' => '$sourcedir/Subs-IntegrationHooks.php',
 	'integrate_admin_areas' => 'hooks_admin_areas',
 	'integrate_modify_modifications' => 'hooks_modify_modifications',
 );
+$mod_name = 'Integration Hooks Report';
 
-if (SMF == 'SSI' && (!isset($_GET['action']) || (isset($_GET['action']) && !in_array($_GET['action'], array('install', 'uninstall')))))
-	echo '
-		Please select the action you want to perform:<br />
-		<a href="' . $boardurl . '/install.php?action=install">Install</a><br />
-		<a href="' . $boardurl . '/install.php?action=uninstall">Uninstall</a>';
+// ---------------------------------------------------------------------------------------------------------------------
+define('SMF_INTEGRATION_SETTINGS', serialize(array(
+	'integrate_menu_buttons' => 'install_menu_button',)));
+
+if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
+	require_once(dirname(__FILE__) . '/SSI.php');
+elseif (!defined('SMF'))
+	exit('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
+
+if (SMF == 'SSI')
+{
+	// Let's start the main job
+	install_mod();
+	// and then let's throw out the template! :P
+	obExit(null, null, true);
+}
 else
 {
-	$context['uninstalling'] = isset($context['uninstalling']) ? $context['uninstalling'] : (isset($_GET['action']) && $_GET['action'] == 'uninstall' ? true : false);
+	setup_hooks();
+}
+
+function install_mod ()
+{
+	global $context, $mod_name;
+
+	$context['mod_name'] = $mod_name;
+	$context['sub_template'] = 'install_script';
+	$context['page_title_html_safe'] = 'Install script of the mod: ' . $mod_name;
+	if (isset($_GET['action']))
+		$context['uninstalling'] = $_GET['action'] == 'uninstall' ? true : false;
+	$context['html_headers'] .= '
+	<style type="text/css">
+    .buttonlist ul {
+      margin:0 auto;
+			display:table;
+		}
+	</style>';
+
+	// Sorry, only logged in admins...
+	isAllowedTo('admin_forum');
+
+	if (isset($context['uninstalling']))
+		setup_hooks();
+}
+
+function setup_hooks ()
+{
+	global $context, $hooks;
+
 	$integration_function = empty($context['uninstalling']) ? 'add_integration_function' : 'remove_integration_function';
 	foreach ($hooks as $hook => $function)
 		$integration_function($hook, $function);
 
-	if (SMF == 'SSI')
-		echo 'Database adaptation successful!';
+	$context['installation_done'] = true;
+}
+
+function install_menu_button (&$buttons)
+{
+	global $boardurl, $context;
+
+	$context['sub_template'] = 'install_script';
+	$context['current_action'] = 'install';
+
+	$buttons['install'] = array(
+		'title' => 'Installation script',
+		'show' => allowedTo('admin_forum'),
+		'href' => $boardurl . '/install.php',
+		'active_button' => true,
+		'sub_buttons' => array(
+		),
+	);
+}
+
+function template_install_script ()
+{
+	global $boardurl, $context;
+
+	echo '
+	<div class="tborder login"">
+		<div class="cat_bar">
+			<h3 class="catbg">
+				Welcome to the install script of the mod: ' . $context['mod_name'] . '
+			</h3>
+		</div>
+		<span class="upperframe"><span></span></span>
+		<div class="roundframe centertext">';
+	if (!isset($context['installation_done']))
+		echo '
+			<strong>Please select the action you want to perform:</strong>
+			<div class="buttonlist">
+				<ul>
+					<li>
+						<a class="active" href="' . $boardurl . '/install.php?action=install">
+							<span>Install</span>
+						</a>
+					</li>
+					<li>
+						<a class="active" href="' . $boardurl . '/install.php?action=uninstall">
+							<span>Uninstall</span>
+						</a>
+					</li>
+				</ul>
+			</div>';
+	else
+		echo '<strong>Database adaptation successful!</strong>';
+
+	echo '
+		</div>
+		<span class="lowerframe"><span></span></span>
+	</div>';
 }
 ?>
