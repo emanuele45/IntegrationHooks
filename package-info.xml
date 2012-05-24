@@ -12,24 +12,22 @@
  * @copyright 2011 [SiNaN], Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 1.4
+ * @version 1.5
  */
 -->
 	</license>
 	<id>[SiNaN]:IntegrationHooks</id>
 	<name>Integration Hooks Report</name>
-	<version>1.4</version>
+	<version>1.5</version>
 	<type>modification</type>
 	<install for="2.0 - 2.0.99">
 		<require-file name="Subs-IntegrationHooks.php" destination="$sourcedir" />
-		<require-file name="IntegrationHooks.template.php" destination="$themedir" />
 		<require-dir name="IntegrationHooks" destination="$languagedir" />
 		<redirect url="?action=admin;area=modsettings;sa=hooks" />
 		<code>install.php</code>
 	</install>
 	<uninstall for="2.0 - 2.0.99">
 		<remove-file name="$sourcedir/Subs-IntegrationHooks.php" />
-		<remove-file name="$themedir/IntegrationHooks.template.php" />
 		<remove-dir name="$languagedir/IntegrationHooks" />
 		<redirect url="?action=admin;area=packages" />
 		<code>install.php</code>

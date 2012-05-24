@@ -9,7 +9,7 @@
  * @copyright 2011 [SiNaN], Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 1.3
+ * @version 1.5
  */
 
 $txt['hooks_title_list'] = 'Integration Hooks';
