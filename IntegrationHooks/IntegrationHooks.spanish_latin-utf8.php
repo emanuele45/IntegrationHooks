@@ -14,7 +14,7 @@
 
 $txt['hooks_title_list'] = 'Integration Hooks';
 $txt['hooks_field_hook_name'] = 'Nombre del Hook';
-$txt['hooks_field_function_name'] = 'Funcion del Hook';
+$txt['hooks_field_function_name'] = 'Función del hook';
 $txt['hooks_field_file_name'] = 'Nombre del Archivo';
 $txt['hooks_field_hook_exists'] = 'Estado';
 $txt['hooks_active'] = 'Existe';

@@ -8,7 +8,7 @@
  * @copyright 2011 [SiNaN], Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 1.5
+ * @version 1.5.1
  */
 
 if (!defined('SMF'))
@@ -78,7 +78,7 @@ function list_integration_hooks()
 		'columns' => array(
 			'hook_name' => array(
 				'header' => array(
-					'value' => $txt['hooks_field_hook_name'],
+					'value' => $txt['hooks_field_hook_name'] . '</a><select id="hooks_filter" style="display:none;margin-left:15px;">' . '<option>---</option><option onclick="window.location = \'' . $scripturl . '?action=admin;area=modsettings;sa=hooks\';">' . $txt['hooks_reset_filter'] . '</option></select><a href="#">',
 				),
 				'data' => array(
 					'db' => 'hook_name',
@@ -127,7 +127,7 @@ function list_integration_hooks()
 							$change_status[\'before\'] = \'<a href="\' . $scripturl . \'?action=admin;area=modsettings;sa=hooks;do=\' . ($data[\'enabled\'] ? \'disable\' : \'enable\') . \';hook=\' . $data[\'hook_name\'] . \';function=\' . $data[\'function_name\'] . $context[\'filter\'] . \';\' . $context[\'session_var\'] . \'=\' . $context[\'session_id\'] . \'" onclick="return confirm(\' . javaScriptEscape($txt[\'quickmod_confirm\']) . \');">\';
 							$change_status[\'after\'] = \'</a>\';
 						}
-						return $change_status[\'before\'] . \'<img src="\' . $settings[\'images_url\'] . \'/admin/post_moderation_\' . $data[\'status\'] . \'.png" alt="\' . $data[\'img_text\'] . \'" title="\' . $data[\'img_text\'] . \'" />\' . $change_status[\'after\'];
+						return $change_status[\'before\'] . \'<img src="\' . $settings[\'images_url\'] . \'/admin/post_moderation_\' . $data[\'status\'] . \'.gif" alt="\' . $data[\'img_text\'] . \'" title="\' . $data[\'img_text\'] . \'" />\' . $change_status[\'after\'];
 					'),
 					'class' => 'centertext',
 				),
@@ -148,7 +148,7 @@ function list_integration_hooks()
 						if (!$data[\'hook_exists\'])
 							return \'
 							<a href="\' . $scripturl . \'?action=admin;area=modsettings;sa=hooks;do=remove;hook=\' . $data[\'hook_name\'] . \';function=\' . $data[\'function_name\'] . $context[\'filter\'] . \';\' . $context[\'session_var\'] . \'=\' . $context[\'session_id\'] . \'" onclick="return confirm(\' . javaScriptEscape($txt[\'quickmod_confirm\']) . \');">
-								<img src="\' . $settings[\'images_url\'] . \'/icons/quick_remove.png" alt="\' . $txt[\'hooks_button_remove\'] . \'" title="\' . $txt[\'hooks_button_remove\'] . \'" />
+								<img src="\' . $settings[\'images_url\'] . \'/icons/quick_remove.gif" alt="\' . $txt[\'hooks_button_remove\'] . \'" title="\' . $txt[\'hooks_button_remove\'] . \'" />
 							</a>\';
 					'),
 					'class' => 'centertext',
@@ -165,21 +165,20 @@ function list_integration_hooks()
 				'value' => $txt['hooks_disable_instructions'] . '<br />
 					' . $txt['hooks_disable_legend'] . ':
 									<ul style="list-style: none;">
-					<li><img src="' . $settings['images_url'] . '/admin/post_moderation_allow.png" alt="' . $txt['hooks_active'] . '" title="' . $txt['hooks_active'] . '" /> ' . $txt['hooks_disable_legend_exists'] . '</li>
-					<li><img src="' . $settings['images_url'] . '/admin/post_moderation_moderate.png" alt="' . $txt['hooks_disabled'] . '" title="' . $txt['hooks_disabled'] . '" /> ' . $txt['hooks_disable_legend_disabled'] . '</li>
-					<li><img src="' . $settings['images_url'] . '/admin/post_moderation_deny.png" alt="' . $txt['hooks_missing'] . '" title="' . $txt['hooks_missing'] . '" /> ' . $txt['hooks_disable_legend_missing'] . '</li>
+					<li><img src="' . $settings['images_url'] . '/admin/post_moderation_allow.gif" alt="' . $txt['hooks_active'] . '" title="' . $txt['hooks_active'] . '" /> ' . $txt['hooks_disable_legend_exists'] . '</li>
+					<li><img src="' . $settings['images_url'] . '/admin/post_moderation_moderate.gif" alt="' . $txt['hooks_disabled'] . '" title="' . $txt['hooks_disabled'] . '" /> ' . $txt['hooks_disable_legend_disabled'] . '</li>
+					<li><img src="' . $settings['images_url'] . '/admin/post_moderation_deny.gif" alt="' . $txt['hooks_missing'] . '" title="' . $txt['hooks_missing'] . '" /> ' . $txt['hooks_disable_legend_missing'] . '</li>
 				</ul>'
 			),
 		),
 	);
+	$context['default_list'] = 'list_integration_hooks';
 
 	require_once($sourcedir . '/Subs-List.php');
 	createList($list_options);
 
 	$context['page_title'] = $txt['hooks_title_list'];
 	$context['sub_template'] = 'show_list';
-	$context['template_layers'][] = 'integrationHooks';
-	$context['default_list'] = 'list_integration_hooks';
 }
 
 function get_files_recursive($dir_path)
@@ -190,7 +189,7 @@ function get_files_recursive($dir_path)
 	{
 		while (($file = readdir($dh)) !== false)
 		{
-			if ($file != '.' && $file != '..')
+			if ($file != '.' && $file != '..' && strpos($file, '~') === false)
 			{
 				if (is_dir($dir_path . '/' . $file))
 					$files = array_merge($files, get_files_recursive($dir_path . '/' . $file));
@@ -262,7 +261,6 @@ function get_integration_hooks_data($start, $per_page, $sort)
 
 	$sort_options = $sort_types[$sort];
 	$sort = array();
-	$context['hooks_filters'] = '';
 	$hooks_filters = array();
 
 	foreach ($hooks as $hook => $functions)
@@ -291,7 +289,24 @@ function get_integration_hooks_data($start, $per_page, $sort)
 	}
 
 	if (!empty($hooks_filters))
-		$context['hooks_filters'] = '<select style="margin-left:15px;">' . '<option>---</option><option onclick="window.location = \'' . $scripturl . '?action=admin;area=modsettings;sa=hooks\';">' . $txt['hooks_reset_filter'] . '</option>' . implode('', $hooks_filters) . '</select>';
+		$context['insert_after_template'] .= '
+	<script type="text/javascript"><!-- // --><![CDATA[
+		var tblHeader = document.getElementById(\'hooks_filter\');
+		tblHeader.innerHTML += ' . JavaScriptEscape(implode('', $hooks_filters)) . ';
+		tblHeader.style.display = \'\';
+
+		function integrationHooks_switchstatus(id)
+		{
+			var elem = document.getElementById(\'input_\'+id);
+			if (elem.value == \'enable\')
+				elem.value = \'disable\';
+			else if (elem.value == \'disable\')
+				elem.value = \'enable\';
+
+			document.forms["' . $context['default_list'] . '"].submit();
+		}
+	// ]]></script>';
+
 
 	$temp_data = array();
 	$id = 0;
